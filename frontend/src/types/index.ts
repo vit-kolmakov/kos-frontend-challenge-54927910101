@@ -16,7 +16,7 @@ interface PropertiesType {
   zone: string;
 }
 
-export interface PoistionsType {
+export interface PositionsType {
   a: number;
   altitude: number;
   b: number;
@@ -37,4 +37,10 @@ export interface PoistionsType {
   x: number;
   y: number;
   z: number;
+}
+
+export interface MergedObject extends ObjectType {
+  x: number;
+  y: number;
+  angle: number;
 }
