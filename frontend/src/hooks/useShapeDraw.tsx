@@ -2,7 +2,8 @@ import { Circle, Path, Star } from "react-konva";
 import { HAMMER_PATH } from "../utils/constants";
 
 export const renderObjectShape = (label: string, scale: number) => {
-  const size = 12 / scale;
+  // const baseSize = 25 / zoomScale;
+  const size = 25 / scale;
 
   const type = label?.toLowerCase() || "";
 
@@ -12,8 +13,8 @@ export const renderObjectShape = (label: string, scale: number) => {
       <Path
         data={HAMMER_PATH}
         fill="red"
-        scaleX={0.7 / scale}
-        scaleY={0.7 / scale}
+        scaleX={3 / scale}
+        scaleY={3 / scale}
         offsetX={12}
         offsetY={12}
         shadowBlur={2}
