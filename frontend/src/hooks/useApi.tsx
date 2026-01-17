@@ -11,6 +11,7 @@ const fetchApiData = async <T,>(endpoint: string): Promise<T> => {
 };
 
 const useApi = <T,>(endpoint: string) => {
+  console.log("use-api");
   return useQuery<T, Error>({
     queryKey: [endpoint],
     queryFn: () => fetchApiData<T>(endpoint),
