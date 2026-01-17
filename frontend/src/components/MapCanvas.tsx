@@ -6,7 +6,7 @@ import type { PoistionsType } from "../types";
 import { renderObjectShape } from "../hooks/useShapeDraw";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type Konva from "konva";
 const END_POINT = "/positions"; // Had to move this out to prevent it from re-render
 const MapCanvas = () => {
@@ -22,8 +22,7 @@ const MapCanvas = () => {
     data: poistionsData,
   } = useApi<PoistionsType[]>(END_POINT);
 
-  const [stageConfig, setStageConfig] = useState({ scale: 1, x: 0, y: 0 });
-  console.log("----MapCanvas----");
+  const stageRef = useRef<Konva.Stage>(null);
   const handleOnScroll = (e: Konva.KonvaEventObject<WheelEvent>) => {
     e.evt.preventDefault();
     const scaleBy = 1.1;
@@ -37,11 +36,12 @@ const MapCanvas = () => {
       y: (pointer.y - stage.y()) / oldScale,
     };
     const newScale = e.evt.deltaY > 0 ? oldScale / scaleBy : oldScale * scaleBy;
-    setStageConfig({
-      scale: newScale,
+    stage.scale({ x: newScale, y: newScale });
+    const newPos = {
       x: pointer.x - mousePointTo.x * newScale,
       y: pointer.y - mousePointTo.y * newScale,
-    });
+    };
+    stage.position(newPos);
   };
 
   return (
@@ -52,11 +52,8 @@ const MapCanvas = () => {
           width={CANVAS_SIZE_PX}
           height={CANVAS_SIZE_PX}
           draggable
+          ref={stageRef}
           onWheel={handleOnScroll}
-          scaleX={stageConfig.scale}
-          scaleY={stageConfig.scale}
-          x={stageConfig.x}
-          y={stageConfig.y}
         >
           <MapBackground />
           <Layer>
