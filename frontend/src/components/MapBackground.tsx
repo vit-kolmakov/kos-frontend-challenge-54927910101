@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Layer, Line, Text, Rect } from "react-konva";
+import { Group, Line, Text, Rect } from "react-konva";
 import { CANVAS_SIZE_PX } from "../utils/coordinates";
 // AI genereated this as this is just a background layer
 const GRID_SIZE_METERS = 10;
@@ -61,7 +61,7 @@ const MapBackground = () => {
   }, []);
 
   return (
-    <Layer>
+    <Group>
       <Rect
         x={0}
         y={0}
@@ -80,7 +80,7 @@ const MapBackground = () => {
         stroke="#333"
         strokeWidth={2}
       />
-    </Layer>
+    </Group>
   );
 };
 

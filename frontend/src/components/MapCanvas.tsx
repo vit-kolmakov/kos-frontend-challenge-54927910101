@@ -1,8 +1,6 @@
 import { Stage, Layer, Text, Group } from "react-konva";
 import { toScreenCoordinates, CANVAS_SIZE_PX } from "../utils/coordinates";
 import MapBackground from "./MapBackground";
-import useApi from "../hooks/useApi";
-import type { PoistionsType } from "../types";
 import { renderObjectShape } from "../hooks/useShapeDraw";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
@@ -11,53 +9,54 @@ import Konva from "konva";
 import Button from "@mui/material/Button";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { Typography } from "@mui/material";
-const END_POINT = "/positions"; // Had to move this out to prevent it from re-render
-const ZOOM_THRESHOLD = 1.5;
+import useMergeData from "../hooks/useMergeData";
+
 const MapCanvas = () => {
-  //   const {
-  //     isLoading,
-  //     error,
-  //     data: objectsData,
-  //   } = useApi<ObjectType[]>("/objects");
+  const { mergedData, isLoading, error } = useMergeData();
 
-  const {
-    isLoading,
-    error,
-    data: poistionsData,
-  } = useApi<PoistionsType[]>(END_POINT);
-
-  const stageRef = useRef<Konva.Stage>(null);
+  //   const stageRef = useRef<Konva.Stage>(null);
+  const objectLayerRef = useRef<Konva.Layer>(null);
   const [showLabels, setShowLabels] = useState(false);
 
   const handleOnScroll = (e: Konva.KonvaEventObject<WheelEvent>) => {
     e.evt.preventDefault();
-    const scaleBy = 1.1;
+
+    const layer = objectLayerRef.current;
     const stage = e.target.getStage();
-    if (!stage) return;
-    const oldScale = stage?.scaleX() || 1;
-    const pointer = stage?.getPointerPosition();
+    if (!layer || !stage) return;
+
+    const scaleBy = 1.1;
+    const oldScale = layer.scaleX();
+
+    const pointer = stage.getPointerPosition();
     if (!pointer) return;
+
     const mousePointTo = {
-      x: (pointer.x - stage.x()) / oldScale,
-      y: (pointer.y - stage.y()) / oldScale,
+      x: (pointer.x - layer.x()) / oldScale,
+      y: (pointer.y - layer.y()) / oldScale,
     };
+
     const newScale = e.evt.deltaY > 0 ? oldScale / scaleBy : oldScale * scaleBy;
-    stage.scale({ x: newScale, y: newScale });
-    stage.position({
+
+    layer.scale({ x: newScale, y: newScale });
+
+    const newPos = {
       x: pointer.x - mousePointTo.x * newScale,
       y: pointer.y - mousePointTo.y * newScale,
-    });
-    const shouldShowLabels = newScale > ZOOM_THRESHOLD;
+    };
 
-    if (shouldShowLabels !== showLabels) {
-      setShowLabels(shouldShowLabels);
+    layer.position(newPos);
+    stage.batchDraw();
+
+    if (newScale > 1.5 !== showLabels) {
+      setShowLabels(newScale > 1.5);
     }
   };
 
   const handleOnResetClicked = () => {
-    const stage = stageRef.current;
-    if (!stage) return;
-    stage.to({
+    const objectlayer = objectLayerRef.current;
+    if (!objectlayer) return;
+    objectlayer.to({
       x: 0,
       y: 0,
       scaleX: 1,
@@ -99,20 +98,26 @@ const MapCanvas = () => {
         <Stage
           width={CANVAS_SIZE_PX}
           height={CANVAS_SIZE_PX}
-          draggable
-          ref={stageRef}
           onWheel={handleOnScroll}
         >
-          <MapBackground />
-          <Layer>
-            {poistionsData?.map((obj) => {
+          <Layer ref={objectLayerRef} draggable>
+            <MapBackground />
+            {mergedData?.map((obj) => {
               const { x, y } = toScreenCoordinates(obj.x, obj.y);
+              const mainLabel = obj.labels?.[0] || "default";
               return (
-                <Group key={obj.object_id} x={x} y={y}>
-                  {renderObjectShape(obj.tag_id, 3)}
+                <Group key={obj.id} x={x} y={y}>
+                  {renderObjectShape(mainLabel, 3)}
 
                   {showLabels && (
-                    <Text text={obj.tag_id} fontSize={14} y={-20} x={-20} />
+                    <Text
+                      text={obj.name}
+                      fontSize={14}
+                      y={-20}
+                      x={-20}
+                      fill="#4c4545"
+                      listening={false}
+                    />
                   )}
                 </Group>
               );
