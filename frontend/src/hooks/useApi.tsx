@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-const BASE_URL = "localhost:8080/api";
+const BASE_URL = "http://localhost:8080/api";
 const fetchApiData = async <T,>(endpoint: string): Promise<T> => {
   const response = await fetch(`${BASE_URL}${endpoint}`);
 

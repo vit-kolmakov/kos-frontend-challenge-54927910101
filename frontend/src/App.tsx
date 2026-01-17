@@ -1,4 +1,5 @@
 import { Container, Typography, Box } from "@mui/material";
+import MapCanvas from "./components/MapCanvas";
 
 function App() {
   return (
@@ -8,7 +9,7 @@ function App() {
       </Typography>
 
       <Box sx={{ display: "flex", justifyContent: "center" }}>
-        PLANT MAP CANVAS
+        <MapCanvas />
       </Box>
 
       <Typography variant="caption" display="block" sx={{ mt: 2 }}>
