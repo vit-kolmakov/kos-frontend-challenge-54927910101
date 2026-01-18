@@ -26,13 +26,13 @@ export interface PositionsType {
   };
   c: number;
   flags: [];
-  is_valid: true;
+  is_valid: boolean;
   latitude: number;
   longitude: number;
   object_id: number;
   source_id: number;
   tag_id: string;
-  tenant_id: 1;
+  tenant_id: number;
   timestamp: string;
   x: number;
   y: number;
