@@ -24,6 +24,7 @@ const useMergeData = () => {
       x: positionOfObject ? positionOfObject.x : 0,
       y: positionOfObject ? positionOfObject.y : 0,
       angle: positionOfObject ? positionOfObject.a : 0,
+      ...positionOfObject,
     };
   });
 

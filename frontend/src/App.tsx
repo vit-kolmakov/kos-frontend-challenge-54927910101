@@ -1,5 +1,6 @@
 import { Container, Typography, Box } from "@mui/material";
 import MapCanvas from "./components/MapCanvas";
+import ObjectDetails from "./components/ObjectDetails";
 
 function App() {
   return (
@@ -12,9 +13,7 @@ function App() {
         <MapCanvas />
       </Box>
 
-      <Typography variant="caption" display="block" sx={{ mt: 2 }}>
-        Legend
-      </Typography>
+      <ObjectDetails />
     </Container>
   );
 }

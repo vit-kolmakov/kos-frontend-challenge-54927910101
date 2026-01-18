@@ -1,7 +1,6 @@
 import { Stage, Layer, Text, Group } from "react-konva";
 import { toScreenCoordinates, CANVAS_SIZE_PX } from "../utils/coordinates";
 import MapBackground from "./MapBackground";
-import { renderObjectShape } from "../hooks/useShapeDraw";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import { useRef, useState } from "react";
@@ -10,6 +9,7 @@ import Button from "@mui/material/Button";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { Typography } from "@mui/material";
 import useMergeData from "../hooks/useMergeData";
+import MapItem from "./MapItem";
 
 const MapCanvas = () => {
   const { mergedData, isLoading, error } = useMergeData();
@@ -104,18 +104,13 @@ const MapCanvas = () => {
             <MapBackground />
             {mergedData?.map((obj) => {
               const { x, y } = toScreenCoordinates(obj.x, obj.y);
-              const mainLabel = obj.labels?.[0] || "default";
-              const rotationAngle = obj.angle;
               return (
                 <Group key={obj.id} x={x} y={y}>
-                  <Group rotation={rotationAngle}>
-                    {renderObjectShape(mainLabel, 3)}
-                  </Group>
-
+                  <MapItem obj={obj} />
                   {showLabels && (
                     <Text
                       text={obj.name}
-                      fontSize={14}
+                      fontSize={11}
                       y={-20}
                       x={-20}
                       fill="#4c4545"
