@@ -1,8 +1,7 @@
-import { Circle, Path, Star } from "react-konva";
+import { Line, Path } from "react-konva";
 import { HAMMER_PATH } from "../utils/constants";
 
 export const renderObjectShape = (label: string, scale: number) => {
-  // const baseSize = 25 / zoomScale;
   const size = 25 / scale;
 
   const type = label?.toLowerCase() || "";
@@ -12,7 +11,7 @@ export const renderObjectShape = (label: string, scale: number) => {
       // AI's help to create a hammer
       <Path
         data={HAMMER_PATH}
-        fill="red"
+        fill="#b6561a"
         scaleX={3 / scale}
         scaleY={3 / scale}
         offsetX={12}
@@ -23,24 +22,22 @@ export const renderObjectShape = (label: string, scale: number) => {
   }
   if (type.includes("container")) {
     return (
-      <Circle
-        radius={size}
-        fill="blue"
-        shadowBlur={2}
-        stroke="white"
-        strokeWidth={2 / scale}
+      <Path
+        data={`M 0,-${size} L ${size / 1.5},0 L ${size / 1.5},${size / 1.5} L -${size / 1.5},${size / 1.5} L -${size / 1.5},0 Z`}
+        fill="#4caf50"
+        stroke="#1b5e20"
+        strokeWidth={1}
       />
     );
   }
 
   return (
-    <Star
-      numPoints={5}
-      innerRadius={size * 0.5}
-      outerRadius={size}
-      fill="orange"
-      shadowBlur={2}
-      rotation={180}
+    <Line
+      points={[0, -size, -size / 1.5, size / 1.5, size / 1.5, size / 1.5]}
+      closed
+      fill="#9c41eb"
+      stroke="#9b207e"
+      strokeWidth={1}
     />
   );
 };

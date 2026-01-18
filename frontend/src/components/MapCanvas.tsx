@@ -105,9 +105,12 @@ const MapCanvas = () => {
             {mergedData?.map((obj) => {
               const { x, y } = toScreenCoordinates(obj.x, obj.y);
               const mainLabel = obj.labels?.[0] || "default";
+              const rotationAngle = obj.angle;
               return (
                 <Group key={obj.id} x={x} y={y}>
-                  {renderObjectShape(mainLabel, 3)}
+                  <Group rotation={rotationAngle}>
+                    {renderObjectShape(mainLabel, 3)}
+                  </Group>
 
                   {showLabels && (
                     <Text
