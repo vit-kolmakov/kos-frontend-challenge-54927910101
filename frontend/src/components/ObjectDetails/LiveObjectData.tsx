@@ -31,7 +31,7 @@ const LiveObjectData = ({
 
   return (
     <Box sx={{ flex: 1 }}>
-      <Box sx={{ display: "flex", flexDirection: "row" }}>
+      <Box display="flex" flexDirection="row">
         <LocationOnIcon
           fontSize="small"
           sx={{ color: "text.secondary", mt: 0.3, mr: 1 }}
@@ -45,7 +45,7 @@ const LiveObjectData = ({
         </Typography>
       </Box>
 
-      <Box sx={{ display: "flex", alignItems: "center", mb: 1.5 }}>
+      <Box display="flex" alignItems="center" mb={1.5}>
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           <BatteryChargingFullIcon
             fontSize="small"
@@ -86,12 +86,8 @@ const LiveObjectData = ({
       </Box>
 
       <Box sx={{ mt: 2, p: 1, bgcolor: "#f9f9f9", borderRadius: 1 }}>
-        <Typography
-          variant="caption"
-          color="text.secondary"
-          sx={{ display: "block" }}
-        >
-          <strong>Updated:</strong>{" "}
+        <Typography variant="caption" color="text.secondary" display="block">
+          <strong>Updated:</strong>
           {new Date(timestamp ?? new Date()).toLocaleTimeString()}
         </Typography>
       </Box>

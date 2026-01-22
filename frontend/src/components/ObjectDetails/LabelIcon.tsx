@@ -14,7 +14,7 @@ const LabelIcon = ({ label }: { label: string }) => {
     <Icon
       fontSize="small"
       sx={{
-        color: "var(--color-primary, #00a7e3)",
+        color: "var(--color-primary, #FFFF)",
         mr: 1,
       }}
     />

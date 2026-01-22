@@ -40,9 +40,9 @@ const ObjectDetails = () => {
     <Paper
       elevation={2}
       sx={{
-        width: "100%", // Stretch to fill container width
-        maxWidth: 800, // Optional: keep it from getting too wide on desktop
-        mt: 2, // Margin top to separate from Canvas
+        width: "100%",
+        maxWidth: 800,
+        mt: 2,
         borderRadius: 2,
         display: "flex",
         flexDirection: "column",
@@ -51,22 +51,21 @@ const ObjectDetails = () => {
     >
       {/* Header */}
       <Box
+        p={2}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
         sx={{
-          p: 2,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          bgcolor: "var(--color-primary)",
-          color: "var(--color-on-primary)",
+          bgcolor: "primary.main",
+          color: "primary.contrastText",
           borderBottom: "1px solid rgba(0,0,0,0.1)",
         }}
       >
         <Box>
-          <Box sx={{ display: "flex" }}>
+          <Box display="flex">
             <LabelIcon label={obj.labels[0]} />
             <Typography
               variant="caption"
-              color="text.primary"
               sx={{ textTransform: "uppercase", fontWeight: "bold" }}
             >
               {obj.labels[0]}
@@ -83,14 +82,7 @@ const ObjectDetails = () => {
       </Box>
 
       {/* Content - Using a Row layout for the two data sections on wider screens */}
-      <Box
-        sx={{
-          p: 2,
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          gap: 4,
-        }}
-      >
+      <Box p={2} display="flex" flexDirection="row" gap={4}>
         {/* Metadata Section */}
         <Box sx={{ flex: 1 }}>
           <Typography
@@ -135,12 +127,10 @@ const DetailRow = ({
   isUrgent?: boolean;
 }) => (
   <Box
-    sx={{
-      display: "flex",
-      justifyContent: "space-between",
-      mb: 0.8,
-      alignItems: "center",
-    }}
+    display="flex"
+    justifyContent="space-between"
+    mb={0.8}
+    alignItems="center"
   >
     <Typography variant="body2" color="text.secondary">
       {label}
