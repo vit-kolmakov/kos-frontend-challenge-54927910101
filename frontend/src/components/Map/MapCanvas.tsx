@@ -23,8 +23,6 @@ interface MapCanvasProps {
 const MapCanvas = ({ data, isLoading, error }: MapCanvasProps) => {
   const nodeRegistry = useRef<Record<string, Konva.Group>>({});
   const { error: streamError } = useStreamData({ registry: nodeRegistry });
-  console.log("error", error);
-  useStreamData({ registry: nodeRegistry });
 
   const objectLayerRef = useRef<Konva.Layer>(null);
   const [showLabels, setShowLabels] = useState(false);
