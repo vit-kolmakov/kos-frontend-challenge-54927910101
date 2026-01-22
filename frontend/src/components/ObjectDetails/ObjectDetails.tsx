@@ -9,20 +9,20 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useAppSelector, useAppDispatch } from "../../store/store";
 import { setSelectedObject } from "../../store/map/mapSlice";
-import useMergeData from "../../hooks/useMergeData";
 import type { MergedObject } from "../../types";
 import LabelIcon from "./LabelIcon";
 import LiveObjectData from "./LiveObjectData";
 
 // Since this page is display of static data and no logic involved
 // i have used AI to generate this page and made some manual changes
-
-const ObjectDetails = () => {
+interface ObjectDetailsProps {
+  data: MergedObject[];
+}
+const ObjectDetails = ({ data }: ObjectDetailsProps) => {
   const dispatch = useAppDispatch();
-  const { mergedData } = useMergeData();
   const selectedId = useAppSelector((state) => state.map.selectedObjectId);
 
-  const obj = mergedData?.find((o) => o.id === selectedId) as
+  const obj = data?.find((o) => o.id === selectedId) as
     | MergedObject
     | undefined;
 

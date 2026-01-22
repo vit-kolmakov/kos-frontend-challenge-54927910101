@@ -19,6 +19,7 @@ const LiveObjectData = ({
   const { data: liveData } = useApi<MergedObject>(`/position?id=${objectId}`, {
     refetchInterval: 10000,
     refetchIntervalInBackground: true,
+    enabled: Boolean(objectId),
   });
 
   const battery =

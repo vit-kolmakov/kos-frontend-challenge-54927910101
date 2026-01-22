@@ -3,18 +3,24 @@ import { toScreenCoordinates, CANVAS_SIZE_PX } from "../utils/coordinates";
 import MapBackground from "./MapBackground";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Konva from "konva";
 import Button from "@mui/material/Button";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { Typography } from "@mui/material";
-import useMergeData from "../hooks/useMergeData";
 import MapItem from "./MapItem";
 import useStreamData from "../hooks/useStreamData";
 import MapLegend from "./MapLegend";
+import type { MergedObject } from "../types";
 
-const MapCanvas = () => {
-  const { mergedData, isLoading, error } = useMergeData();
+interface MapCanvasProps {
+  data: MergedObject[];
+  error: Error | null;
+  isLoading: boolean;
+}
+
+const MapCanvas = ({ data, isLoading, error }: MapCanvasProps) => {
+  console.log("in Map Canvas");
 
   const nodeRegistry = useRef<Record<string, Konva.Group>>({});
 
@@ -71,6 +77,43 @@ const MapCanvas = () => {
     });
     setShowLabels(false);
   };
+
+  const renderedObjects = useMemo(() => {
+    return data?.map((obj) => {
+      const initialPos = toScreenCoordinates(obj.x, obj.y);
+      return (
+        <Group
+          key={obj.id}
+          ref={(node) => {
+            if (!node) {
+              delete nodeRegistry.current[String(obj.id)];
+              return;
+            }
+            const idKey = String(obj.id);
+            nodeRegistry.current[idKey] = node;
+            const isInitialized = node.getAttr("isInitialized");
+            if (!isInitialized) {
+              node.position({ x: initialPos.x, y: initialPos.y });
+              node.rotation(obj.angle || 0);
+              node.setAttr("isInitialized", true);
+            }
+          }}
+        >
+          <MapItem obj={obj} />
+          {showLabels && (
+            <Text
+              text={obj.name}
+              fontSize={6}
+              y={-20}
+              x={-20}
+              fill="#4c4545"
+              listening={false}
+            />
+          )}
+        </Group>
+      );
+    });
+  }, [data, showLabels]);
 
   return (
     <Box
@@ -132,40 +175,7 @@ const MapCanvas = () => {
       >
         <Layer ref={objectLayerRef} draggable>
           <MapBackground />
-          {mergedData?.map((obj) => {
-            const initialPos = toScreenCoordinates(obj.x, obj.y);
-            return (
-              <Group
-                key={obj.id}
-                ref={(node) => {
-                  if (!node) {
-                    delete nodeRegistry.current[String(obj.id)];
-                    return;
-                  }
-                  const idKey = String(obj.id);
-                  nodeRegistry.current[idKey] = node;
-                  const isInitialized = node.getAttr("isInitialized");
-                  if (!isInitialized) {
-                    node.position({ x: initialPos.x, y: initialPos.y });
-                    node.rotation(obj.angle || 0);
-                    node.setAttr("isInitialized", true);
-                  }
-                }}
-              >
-                <MapItem obj={obj} />
-                {showLabels && (
-                  <Text
-                    text={obj.name}
-                    fontSize={6}
-                    y={-20}
-                    x={-20}
-                    fill="#4c4545"
-                    listening={false}
-                  />
-                )}
-              </Group>
-            );
-          })}
+          {renderedObjects}
         </Layer>
       </Stage>
     </Box>
