@@ -12,6 +12,7 @@ import MapItem from "./MapItem";
 import useStreamData from "../hooks/useStreamData";
 import MapLegend from "./MapLegend";
 import type { MergedObject } from "../types";
+import StreamError from "./StreamError";
 
 interface MapCanvasProps {
   data: MergedObject[];
@@ -21,7 +22,8 @@ interface MapCanvasProps {
 
 const MapCanvas = ({ data, isLoading, error }: MapCanvasProps) => {
   const nodeRegistry = useRef<Record<string, Konva.Group>>({});
-
+  const { error: streamError } = useStreamData({ registry: nodeRegistry });
+  console.log("error", error);
   useStreamData({ registry: nodeRegistry });
 
   const objectLayerRef = useRef<Konva.Layer>(null);
@@ -143,43 +145,46 @@ const MapCanvas = ({ data, isLoading, error }: MapCanvasProps) => {
           <CircularProgress color="secondary" />
         </Box>
       )}
-      {!isLoading && error && (
+
+      {!error && streamError && <StreamError message={streamError} />}
+      {!isLoading && error ? (
         <Typography variant="h4">
           Error while fetching data. Reason : {error.message}
         </Typography>
+      ) : (
+        !isLoading && (
+          <>
+            <Button
+              variant="contained"
+              size="small"
+              startIcon={<RestartAltIcon />}
+              onClick={handleOnResetClicked}
+              sx={{
+                position: "absolute",
+                top: 10,
+                right: 10,
+                zIndex: 10,
+                backgroundColor: "rgba(255, 255, 255, 0.9)",
+                color: "#333",
+                "&:hover": { backgroundColor: "#fff" },
+              }}
+            >
+              Reset View
+            </Button>
+            <MapLegend />
+            <Stage
+              width={CANVAS_SIZE_PX}
+              height={CANVAS_SIZE_PX}
+              onWheel={handleOnScroll}
+            >
+              <Layer ref={objectLayerRef} draggable>
+                <MapBackground />
+                {renderedObjects}
+              </Layer>
+            </Stage>
+          </>
+        )
       )}
-      {!isLoading && (
-        <>
-          <Button
-            variant="contained"
-            size="small"
-            startIcon={<RestartAltIcon />}
-            onClick={handleOnResetClicked}
-            sx={{
-              position: "absolute",
-              top: 10,
-              right: 10,
-              zIndex: 10,
-              backgroundColor: "rgba(255, 255, 255, 0.9)",
-              color: "#333",
-              "&:hover": { backgroundColor: "#fff" },
-            }}
-          >
-            Reset View
-          </Button>
-          <MapLegend />
-        </>
-      )}
-      <Stage
-        width={CANVAS_SIZE_PX}
-        height={CANVAS_SIZE_PX}
-        onWheel={handleOnScroll}
-      >
-        <Layer ref={objectLayerRef} draggable>
-          <MapBackground />
-          {renderedObjects}
-        </Layer>
-      </Stage>
     </Box>
   );
 };

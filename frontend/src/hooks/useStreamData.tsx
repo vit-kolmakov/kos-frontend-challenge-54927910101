@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { RefObject } from "react";
 import type { PositionsType } from "../types";
 import Konva from "konva";
@@ -10,6 +10,7 @@ interface UseStreamDataParams {
 }
 
 const useStreamData = ({ registry }: UseStreamDataParams) => {
+  const [error, setError] = useState<string | null>(null);
   const initializedIds = useRef<Set<number>>(new Set());
 
   const lastUpdateTimes = useRef<Record<string, number>>({});
@@ -18,6 +19,18 @@ const useStreamData = ({ registry }: UseStreamDataParams) => {
     const eventSource = new EventSource(
       "http://localhost:8080/api/positions/stream",
     );
+
+    eventSource.onerror = (err) => {
+      console.error("SSE Connection Error:", err);
+      setError(
+        "Unable to fetch live updates. You are viewing a static snapshot; please refresh to retry.",
+      );
+      eventSource.close();
+    };
+
+    eventSource.onopen = () => {
+      setError(null);
+    };
     eventSource.onmessage = (event) => {
       try {
         const data: PositionsType = JSON.parse(event.data);
@@ -65,7 +78,10 @@ const useStreamData = ({ registry }: UseStreamDataParams) => {
 
           initializedIds.current.add(data.object_id);
         }
-      } catch (err) {
+      } catch (err: unknown) {
+        const errorMessage =
+          err instanceof Error ? err.message : "Data processing error";
+        setError(errorMessage);
         console.error("SSE Parse Error", err);
       }
     };
@@ -74,6 +90,8 @@ const useStreamData = ({ registry }: UseStreamDataParams) => {
       eventSource.close();
     };
   }, [registry]);
+
+  return { error };
 };
 
 export default useStreamData;
