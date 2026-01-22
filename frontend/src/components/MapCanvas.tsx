@@ -11,6 +11,7 @@ import { Typography } from "@mui/material";
 import useMergeData from "../hooks/useMergeData";
 import MapItem from "./MapItem";
 import useStreamData from "../hooks/useStreamData";
+import MapLegend from "./MapLegend";
 
 const MapCanvas = () => {
   const { mergedData, isLoading, error } = useMergeData();
@@ -72,18 +73,24 @@ const MapCanvas = () => {
   };
 
   return (
-    <Box style={{ border: "2px solid #333", display: "inline-block" }}>
+    <Box
+      style={{
+        border: "2px solid #333",
+        display: "inline-block",
+        position: "relative",
+      }}
+    >
       {isLoading && (
         <Box
+          position="absolute"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          top={0}
+          left={0}
           sx={{
-            position: "absolute",
-            top: 0,
-            left: 0,
             width: "100%",
             height: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
             backgroundColor: "rgba(255, 255, 255, 0.5)",
             zIndex: 20,
           }}
@@ -97,23 +104,26 @@ const MapCanvas = () => {
         </Typography>
       )}
       {!isLoading && (
-        <Button
-          variant="contained"
-          size="small"
-          startIcon={<RestartAltIcon />}
-          onClick={handleOnResetClicked}
-          sx={{
-            position: "absolute",
-            top: 10,
-            right: 10,
-            zIndex: 10,
-            backgroundColor: "rgba(255, 255, 255, 0.9)",
-            color: "#333",
-            "&:hover": { backgroundColor: "#fff" },
-          }}
-        >
-          Reset View
-        </Button>
+        <>
+          <Button
+            variant="contained"
+            size="small"
+            startIcon={<RestartAltIcon />}
+            onClick={handleOnResetClicked}
+            sx={{
+              position: "absolute",
+              top: 10,
+              right: 10,
+              zIndex: 10,
+              backgroundColor: "rgba(255, 255, 255, 0.9)",
+              color: "#333",
+              "&:hover": { backgroundColor: "#fff" },
+            }}
+          >
+            Reset View
+          </Button>
+          <MapLegend />
+        </>
       )}
       <Stage
         width={CANVAS_SIZE_PX}

@@ -85,9 +85,15 @@ const LiveObjectData = ({
         </Box>
       </Box>
 
-      <Box sx={{ mt: 2, p: 1, bgcolor: "#f9f9f9", borderRadius: 1 }}>
+      <Box
+        display="flex"
+        justifyContent="content"
+        sx={{ mt: 2, p: 1, bgcolor: "#f9f9f9", borderRadius: 1 }}
+      >
         <Typography variant="caption" color="text.secondary" display="block">
           <strong>Updated:</strong>
+        </Typography>
+        <Typography variant="caption" color="text.secondary" display="block">
           {new Date(timestamp ?? new Date()).toLocaleTimeString()}
         </Typography>
       </Box>
