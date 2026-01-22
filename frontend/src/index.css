@@ -30,6 +30,7 @@ body {
   align-items: start;
   min-width: 320px;
   min-height: 100vh;
+  background: linear-gradient(135deg, #008acf 0%, #0066a7 100%);
 }
 
 h1 {

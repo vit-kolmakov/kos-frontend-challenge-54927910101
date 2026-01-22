@@ -14,8 +14,8 @@ const MapItem = React.memo(({ obj }: { obj: MergedObject }) => {
         console.log("obj", obj);
         dispatch(setSelectedObject(obj.id));
       }}
-      x={obj.x}
-      y={obj.y}
+      x={0}
+      y={0}
     >
       {renderObjectShape(obj.labels[0], 3)}
     </Group>

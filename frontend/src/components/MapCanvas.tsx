@@ -10,11 +10,15 @@ import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { Typography } from "@mui/material";
 import useMergeData from "../hooks/useMergeData";
 import MapItem from "./MapItem";
+import useStreamData from "../hooks/useStreamData";
 
 const MapCanvas = () => {
   const { mergedData, isLoading, error } = useMergeData();
 
-  //   const stageRef = useRef<Konva.Stage>(null);
+  const nodeRegistry = useRef<Record<string, Konva.Group>>({});
+
+  useStreamData({ registry: nodeRegistry });
+
   const objectLayerRef = useRef<Konva.Layer>(null);
   const [showLabels, setShowLabels] = useState(false);
 
@@ -69,7 +73,24 @@ const MapCanvas = () => {
 
   return (
     <Box style={{ border: "2px solid #333", display: "inline-block" }}>
-      {isLoading && <CircularProgress color="secondary" />}
+      {isLoading && (
+        <Box
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(255, 255, 255, 0.5)",
+            zIndex: 20,
+          }}
+        >
+          <CircularProgress color="secondary" />
+        </Box>
+      )}
       {!isLoading && error && (
         <Typography variant="h4">
           Error while fetching data. Reason : {error.message}{" "}
@@ -94,35 +115,49 @@ const MapCanvas = () => {
           Reset View
         </Button>
       )}
-      {!isLoading && (
-        <Stage
-          width={CANVAS_SIZE_PX}
-          height={CANVAS_SIZE_PX}
-          onWheel={handleOnScroll}
-        >
-          <Layer ref={objectLayerRef} draggable>
-            <MapBackground />
-            {mergedData?.map((obj) => {
-              const { x, y } = toScreenCoordinates(obj.x, obj.y);
-              return (
-                <Group key={obj.id} x={x} y={y}>
-                  <MapItem obj={obj} />
-                  {showLabels && (
-                    <Text
-                      text={obj.name}
-                      fontSize={11}
-                      y={-20}
-                      x={-20}
-                      fill="#4c4545"
-                      listening={false}
-                    />
-                  )}
-                </Group>
-              );
-            })}
-          </Layer>
-        </Stage>
-      )}
+      <Stage
+        width={CANVAS_SIZE_PX}
+        height={CANVAS_SIZE_PX}
+        onWheel={handleOnScroll}
+      >
+        <Layer ref={objectLayerRef} draggable>
+          <MapBackground />
+          {mergedData?.map((obj) => {
+            const initialPos = toScreenCoordinates(obj.x, obj.y);
+            return (
+              <Group
+                key={obj.id}
+                ref={(node) => {
+                  if (!node) {
+                    delete nodeRegistry.current[String(obj.id)];
+                    return;
+                  }
+                  const idKey = String(obj.id);
+                  nodeRegistry.current[idKey] = node;
+                  const isInitialized = node.getAttr("isInitialized");
+                  if (!isInitialized) {
+                    node.position({ x: initialPos.x, y: initialPos.y });
+                    node.rotation(obj.angle || 0);
+                    node.setAttr("isInitialized", true);
+                  }
+                }}
+              >
+                <MapItem obj={obj} />
+                {showLabels && (
+                  <Text
+                    text={obj.name}
+                    fontSize={6}
+                    y={-20}
+                    x={-20}
+                    fill="#4c4545"
+                    listening={false}
+                  />
+                )}
+              </Group>
+            );
+          })}
+        </Layer>
+      </Stage>
     </Box>
   );
 };

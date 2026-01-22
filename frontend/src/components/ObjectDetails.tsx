@@ -13,9 +13,93 @@ import { useAppSelector, useAppDispatch } from "../store/store";
 import { setSelectedObject } from "../store/map/mapSlice";
 import useMergeData from "../hooks/useMergeData";
 import type { MergedObject } from "../types";
+import useApi from "../hooks/useApi";
 
 // Since this page is display of static data and no logic involved
 // i have used AI to generate this page and made some manual changes
+
+//Custom made - to fetch position data every 10s using tanstack query
+const LiveObjectData = ({
+  objectId,
+  initialData,
+}: {
+  objectId: number | undefined;
+  initialData: MergedObject;
+}) => {
+  const { data: liveData } = useApi<MergedObject>(`/position?id=${objectId}`, {
+    refetchInterval: 10000,
+    refetchIntervalInBackground: true,
+  });
+
+  const battery =
+    liveData?.battery?.percentage ?? initialData.battery?.percentage;
+  const x = liveData?.x ?? initialData.x;
+  const y = liveData?.y ?? initialData.y;
+  const lat = liveData?.latitude ?? initialData.latitude;
+  const lon = liveData?.longitude ?? initialData.longitude;
+  const timestamp = liveData?.timestamp ?? initialData.timestamp;
+
+  return (
+    <Box sx={{ flex: 1 }}>
+      <Box sx={{ display: "flex", flexDirection: "row" }}>
+        <LocationOnIcon
+          fontSize="small"
+          sx={{ color: "text.secondary", mt: 0.3, mr: 1 }}
+        />
+        <Typography
+          variant="subtitle2"
+          color="primary"
+          sx={{ mb: 1, fontWeight: "bold" }}
+        >
+          LOCATION & STATUS (LIVE)
+        </Typography>
+      </Box>
+
+      <Box sx={{ display: "flex", alignItems: "center", mb: 1.5 }}>
+        <BatteryChargingFullIcon
+          fontSize="small"
+          sx={{
+            mr: 1,
+            color: (battery ?? 0) < 20 ? "error.main" : "success.main",
+          }}
+        />
+        <Typography variant="body2" fontWeight="medium">
+          Battery: {battery !== undefined ? `${battery}%` : "N/A"}
+        </Typography>
+      </Box>
+
+      <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
+        <LocationOnIcon
+          fontSize="small"
+          sx={{ color: "text.secondary", mt: 0.3 }}
+        />
+        <Box>
+          <Typography variant="body2">
+            <strong>Tag:</strong> {initialData.tag_id}
+          </Typography>
+          <Typography variant="body2">
+            <strong>X:</strong> {x.toFixed(2)} <strong>Y:</strong>{" "}
+            {y.toFixed(2)}
+          </Typography>
+          <Typography variant="body2">
+            <strong>Lat/Lon:</strong> {lat?.toFixed(4)}, {lon?.toFixed(4)}
+          </Typography>
+        </Box>
+      </Box>
+
+      <Box sx={{ mt: 2, p: 1, bgcolor: "#f9f9f9", borderRadius: 1 }}>
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          sx={{ display: "block" }}
+        >
+          <strong>Updated:</strong>{" "}
+          {new Date(timestamp ?? new Date()).toLocaleTimeString()}
+        </Typography>
+      </Box>
+    </Box>
+  );
+};
 
 const ObjectDetails = () => {
   const dispatch = useAppDispatch();
@@ -25,6 +109,9 @@ const ObjectDetails = () => {
   const obj = mergedData?.find((o) => o.id === selectedId) as
     | MergedObject
     | undefined;
+
+  // const liveData = useLatestObjectData(selectedId);
+  // console.log("liveData", liveData);
 
   if (!obj) return null;
 
@@ -56,8 +143,9 @@ const ObjectDetails = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          bgcolor: "#f5f5f5",
-          borderBottom: "1px solid #ddd",
+          bgcolor: "var(--color-primary)",
+          color: "var(--color-on-primary)",
+          borderBottom: "1px solid rgba(0,0,0,0.1)",
         }}
       >
         <Box>
@@ -114,66 +202,7 @@ const ObjectDetails = () => {
         />
 
         {/* Telemetry Section */}
-        <Box sx={{ flex: 1 }}>
-          <Typography
-            variant="subtitle2"
-            color="primary"
-            sx={{ mb: 1, fontWeight: "bold" }}
-          >
-            LOCATION & STATUS
-          </Typography>
-
-          <Box sx={{ display: "flex", alignItems: "center", mb: 1.5 }}>
-            <BatteryChargingFullIcon
-              fontSize="small"
-              sx={{
-                mr: 1,
-                color:
-                  (obj.battery?.percentage ?? 0) < 20
-                    ? "error.main"
-                    : "success.main",
-              }}
-            />
-            <Typography variant="body2" fontWeight="medium">
-              Battery:{" "}
-              {obj.battery?.percentage !== undefined
-                ? `${obj.battery.percentage}%`
-                : "N/A"}
-            </Typography>
-          </Box>
-
-          <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
-            <LocationOnIcon
-              fontSize="small"
-              sx={{ color: "text.secondary", mt: 0.3 }}
-            />
-            <Box>
-              <Typography variant="body2">
-                <strong>Tag:</strong> {obj.tag_id}
-              </Typography>
-              <Typography variant="body2">
-                <strong>X:</strong> {obj.x.toFixed(2)} <strong>Y:</strong>{" "}
-                {obj.y.toFixed(2)}
-              </Typography>
-              <Typography variant="body2">
-                <strong>Lat/Lon:</strong> {obj.latitude?.toFixed(4)},{" "}
-                {obj.longitude?.toFixed(4)}
-              </Typography>
-            </Box>
-          </Box>
-
-          <Box sx={{ mt: 2, p: 1, bgcolor: "#f9f9f9", borderRadius: 1 }}>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{ display: "block" }}
-            >
-              <strong>Object ID:</strong> {obj.object_id} |{" "}
-              <strong>Updated:</strong>{" "}
-              {new Date(obj.timestamp ?? new Date()).toLocaleTimeString()}
-            </Typography>
-          </Box>
-        </Box>
+        <LiveObjectData objectId={obj.object_id} initialData={obj} />
       </Box>
     </Paper>
   );
