@@ -14,7 +14,6 @@ const MapItem = React.memo(({ obj }: { obj: MergedObject }) => {
   return (
     <Group
       onClick={() => {
-        console.log("obj", obj);
         dispatch(setSelectedObject(obj.id));
       }}
       x={0}

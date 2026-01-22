@@ -20,8 +20,6 @@ interface MapCanvasProps {
 }
 
 const MapCanvas = ({ data, isLoading, error }: MapCanvasProps) => {
-  console.log("in Map Canvas");
-
   const nodeRegistry = useRef<Record<string, Konva.Group>>({});
 
   useStreamData({ registry: nodeRegistry });
