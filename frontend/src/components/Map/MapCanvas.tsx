@@ -1,5 +1,5 @@
 import { Stage, Layer, Text, Group } from "react-konva";
-import { toScreenCoordinates, CANVAS_SIZE_PX } from "../utils/coordinates";
+import { toScreenCoordinates, CANVAS_SIZE_PX } from "../../utils/coordinates";
 import MapBackground from "./MapBackground";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
@@ -9,10 +9,10 @@ import Button from "@mui/material/Button";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { Typography } from "@mui/material";
 import MapItem from "./MapItem";
-import useStreamData from "../hooks/useStreamData";
+import useStreamData from "../../hooks/useStreamData";
 import MapLegend from "./MapLegend";
-import type { MergedObject } from "../types";
-import StreamError from "./StreamError";
+import type { MergedObject } from "../../types";
+import StreamError from "../StreamError";
 
 interface MapCanvasProps {
   data: MergedObject[];

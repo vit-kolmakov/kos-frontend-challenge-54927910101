@@ -1,13 +1,13 @@
 import React from "react";
 import { Group } from "react-konva";
-import { renderObjectShape } from "../hooks/useShapeDraw";
-import { useAppDispatch, useAppSelector } from "../store/store";
-import { setSelectedObject } from "../store/map/mapSlice";
-import type { MergedObject } from "../types";
+import { renderObjectShape } from "../../hooks/useShapeDraw";
+import { useAppDispatch, useAppSelector } from "../../store/store";
+import { setSelectedObject } from "../../store/map/mapSlice";
+import type { MergedObject } from "../../types";
 import {
   handlePointerDisabled,
   handlePointerEnabled,
-} from "../utils/objectMouseHandler";
+} from "../../utils/objectMouseHandler";
 
 const MapItem = React.memo(({ obj }: { obj: MergedObject }) => {
   const dispatch = useAppDispatch();

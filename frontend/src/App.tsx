@@ -1,5 +1,5 @@
 import { Container, Typography, Box } from "@mui/material";
-import MapCanvas from "./components/MapCanvas";
+import MapCanvas from "./components/Map/MapCanvas";
 import ObjectDetails from "./components/ObjectDetails/ObjectDetails";
 import useMergeData from "./hooks/useMergeData";
 

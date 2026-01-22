@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Group, Line, Text, Rect } from "react-konva";
-import { CANVAS_SIZE_PX } from "../utils/coordinates";
+import { CANVAS_SIZE_PX } from "../../utils/coordinates";
 // AI genereated this as this is just a background layer
 const GRID_SIZE_METERS = 10;
 const MAP_SIZE_METERS = 100;
