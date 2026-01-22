@@ -7,7 +7,7 @@ function App() {
   const { mergedData, isLoading, error } = useMergeData();
   return (
     <Container maxWidth="lg" sx={{ mt: 4, textAlign: "center" }}>
-      <Typography variant="h4" gutterBottom sx={{ color: "#FFFF" }}>
+      <Typography variant="h3" gutterBottom sx={{ color: "#FFFF" }}>
         Plant Map
       </Typography>
 

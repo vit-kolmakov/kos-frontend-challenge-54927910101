@@ -1,23 +1,13 @@
 import { Paper, Box, Typography, Stack } from "@mui/material";
 
-const LegendItem = ({
-  color,
-  label,
-  shape,
-}: {
-  color: string;
-  label: string;
-  shape: "path" | "triangle";
-}) => (
+const LegendItem = ({ color, label }: { color: string; label: string }) => (
   <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 1 }}>
     <Box
       sx={{
         width: 16,
         height: 16,
         bgcolor: color,
-        borderRadius: shape === "path" ? "2px" : "0px",
-        clipPath:
-          shape === "triangle" ? "polygon(50% 0%, 0% 100%, 100% 100%)" : "none",
+        borderRadius: "2px",
         border: "1px solid rgba(0,0,0,0.1)",
       }}
     />
@@ -58,9 +48,9 @@ const MapLegend = () => {
       >
         Legend
       </Typography>
-      <LegendItem color="#b6561a" label="Tool" shape="path" />
-      <LegendItem color="#4caf50" label="Container" shape="path" />
-      <LegendItem color="#9c41eb" label="Order" shape="triangle" />
+      <LegendItem color="#b6561a" label="Tool" />
+      <LegendItem color="#4caf50" label="Container" />
+      <LegendItem color="#9c41eb" label="Order" />
     </Paper>
   );
 };

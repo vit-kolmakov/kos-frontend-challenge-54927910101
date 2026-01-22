@@ -99,17 +99,21 @@ const MapCanvas = ({ data, isLoading, error }: MapCanvasProps) => {
             }
           }}
         >
-          <MapItem obj={obj} />
-          {showLabels && (
-            <Text
-              text={obj.name}
-              fontSize={6}
-              y={-20}
-              x={-20}
-              fill="#4c4545"
-              listening={false}
-            />
-          )}
+          <Group>
+            <MapItem obj={obj} />
+            {showLabels && (
+              <Text
+                text={obj.name}
+                fontSize={6}
+                x={-25}
+                y={-15}
+                width={50}
+                align="center"
+                fill="#4c4545"
+                listening={false}
+              />
+            )}
+          </Group>
         </Group>
       );
     });
