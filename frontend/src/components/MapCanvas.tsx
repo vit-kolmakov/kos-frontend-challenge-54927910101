@@ -100,7 +100,7 @@ const MapCanvas = () => {
       )}
       {!isLoading && error && (
         <Typography variant="h4">
-          Error while fetching data. Reason : {error.message}{" "}
+          Error while fetching data. Reason : {error.message}
         </Typography>
       )}
       {!isLoading && (

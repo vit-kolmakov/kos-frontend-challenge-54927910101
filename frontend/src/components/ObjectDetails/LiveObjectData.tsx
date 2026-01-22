@@ -87,7 +87,7 @@ const LiveObjectData = ({
 
       <Box
         display="flex"
-        justifyContent="content"
+        justifyContent="center"
         sx={{ mt: 2, p: 1, bgcolor: "#f9f9f9", borderRadius: 1 }}
       >
         <Typography variant="caption" color="text.secondary" display="block">
