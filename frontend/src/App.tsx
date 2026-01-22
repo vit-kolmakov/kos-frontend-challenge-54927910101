@@ -1,6 +1,6 @@
 import { Container, Typography, Box } from "@mui/material";
 import MapCanvas from "./components/MapCanvas";
-import ObjectDetails from "./components/ObjectDetails";
+import ObjectDetails from "./components/ObjectDetails/ObjectDetails";
 
 function App() {
   return (
