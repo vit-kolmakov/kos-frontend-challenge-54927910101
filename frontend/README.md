@@ -94,6 +94,8 @@ Just like every other app, this application has scope for improvement, and these
 
 - Splitting the object details API to fetch the latest object details by ID and getting live position data from the SSE.
 
+- Visual indicators for urgent orders
+
 ### Time Spent
 
 I spent a total of **15 hours** on this task, most of which was dedicated to learning and becoming familiar with the canvas. Around 2 hours were spent investigating a teleportation issue that appeared after integrating the SSE API. Initially, I suspected that my message queue was full and that the frontend was too slow in processing incoming messages, so I tried to optimize it. However, AI was not helpful at that stage.
