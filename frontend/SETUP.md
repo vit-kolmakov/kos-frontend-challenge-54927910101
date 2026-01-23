@@ -16,6 +16,8 @@ Navigate to the root directory and run the following command
    docker compose up --build
 ```
 
+or following the instructions below if you just want to run frontend
+
 In the frontend folder run the follwing command to build the docker image
 
 ```bash
