@@ -8,6 +8,14 @@ A short guide on how to setup frontend to run locally.
 
 ## Installation
 
+If you want to run both frontend and backend together then
+
+Navigate to the root directory and run the following command
+
+```bash
+   docker compose up --build
+```
+
 In the frontend folder run the follwing command to build the docker image
 
 ```bash

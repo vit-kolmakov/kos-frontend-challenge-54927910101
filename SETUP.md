@@ -16,7 +16,13 @@ This guide will help you set up and run the challenge backend server.
    cd fe-challenge
    ```
 
-3. **Run with Docker**
+3. **Run with docker compose**
+
+```bash
+   docker compose up --build
+```
+
+4. **Alternatively: Run with Docker (only backend)**
 
 ```bash
 # Build the Docker image
@@ -51,9 +57,11 @@ Visit `http://localhost:8080` in your browser to see the server status page.
 ### Test SSE Stream (in browser console)
 
 ```javascript
-const eventSource = new EventSource('http://localhost:8080/api/positions/stream');
+const eventSource = new EventSource(
+  "http://localhost:8080/api/positions/stream",
+);
 eventSource.onmessage = (event) => {
-  console.log('Position update:', JSON.parse(event.data));
+  console.log("Position update:", JSON.parse(event.data));
 };
 ```
 
